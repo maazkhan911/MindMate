@@ -1,0 +1,97 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMate - Dark Mood Detector</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+      color: #fff;
+      font-family: 'Cinzel Decorative', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      position: relative;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    .container {
+      z-index: 1;
+      text-align: center;
+      padding: 40px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 48px;
+      color: #e94560;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #e94560;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 40px;
+      color: #ccc;
+    }
+
+    .btn {
+      background: #e94560;
+      border: none;
+      padding: 15px 30px;
+      margin: 10px;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #e94560;
+    }
+
+    .btn:hover {
+      background: #ff2c53;
+      box-shadow: 0 0 20px #ff2c53, 0 0 30px #ff2c53;
+    }
+
+    .footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="container">
+    <h1>MindMate</h1>
+    <p>Enter the shadows... Let us reveal your true emotion.</p>
+
+    <a href="{% url 'chatbot' %}"><button class="btn">Summon the Bot 👁️</button></a>
+    <a href="{% url 'image_upload' %}"><button class="btn">Reveal via Image 🔮</button></a>
+
+    <div class="footer">© 2025 MindMate. Mood sensing from the unknown...</div>
+  </div>
+
+</body>
+</html>

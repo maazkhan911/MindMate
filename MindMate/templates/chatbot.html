@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMate Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cinzel Decorative', cursive;
+      background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 25px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    header .left {
+      flex: 1;
+    }
+
+    header .center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 22px;
+      transition: color 0.3s ease;
+    }
+
+    header a:hover {
+      color: #ccc;
+    }
+
+    #chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: transparent;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .message {
+      margin: 12px 0;
+      padding: 14px 18px;
+      border-radius: 15px;
+      max-width: 75%;
+      font-size: 16px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .user {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #e94560;
+      align-self: flex-end;
+      margin-left: auto;
+      text-align: right;
+      color: white; /* Fixes invisible text */
+    }
+
+    .bot {
+      background: #f1f1f1;
+      color: #000;
+      border-left: 4px solid #000;
+      align-self: flex-start;
+      margin-right: auto;
+    }
+
+    #input-area {
+      display: flex;
+      padding: 15px;
+      background-color: #111;
+      border-top: 1px solid #333;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      background-color: #000;
+      color: white;
+      border: 1px solid #444;
+      outline: none;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #e94560;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 0 10px #e94560;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff2c53;
+      box-shadow: 0 0 20px #ff2c53, 0 0 30px #ff2c53;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="left">
+      <a href="{% url 'home' %}">👈 Back</a>
+    </div>
+    <div class="center">
+      MindMate Chatbot
+    </div>
+  </header>
+
+  <div id="chat-box"></div>
+
+  <div id="input-area">
+    <input id="user-input" type="text" placeholder="Type your message..." onkeydown="handleKey(event)">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div class='message user'><strong>You:</strong> ${message}</div>`;
+      input.value = '';
+
+      fetch('/chatbot/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.getElementById('csrf-token').value
+        },
+        body: JSON.stringify({ message: message })
+      })
+      .then(response => response.json())
+      .then(data => {
+        chatBox.innerHTML += `<div class='message bot'><strong>Bot:</strong> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      })
+      .catch(error => {
+        chatBox.innerHTML += `<div class='message bot'><strong>Error:</strong> Could not reach server.</div>`;
+      });
+    }
+
+    function handleKey(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    }
+  </script>
+
+</body>
+</html>
+ 
